@@ -1,0 +1,10 @@
+reset_filter:
+  name: Reset filter
+  description: Mark the filter as replaced today and reset the counter.
+  fields:
+    entry_id:
+      name: Entry ID
+      description: Optional config entry ID (defaults to the first configured filter).
+      required: false
+      selector:
+        text:

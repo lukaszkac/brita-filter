@@ -1,0 +1,57 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Brita Filter",
+        "description": "Configure your Brita filter monitor",
+        "data": {
+          "name": "Name",
+          "filter_lifetime_days": "Filter lifetime (days)",
+          "last_replaced": "Last replaced (YYYY-MM-DD)"
+        }
+      }
+    },
+    "error": {},
+    "abort": {
+      "already_configured": "This filter is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Brita Filter options",
+        "data": {
+          "filter_lifetime_days": "Filter lifetime (days)",
+          "last_replaced": "Last replaced (YYYY-MM-DD)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "days_since": {
+        "name": "Days since replacement"
+      },
+      "remaining_pct": {
+        "name": "Filter remaining"
+      },
+      "display_level": {
+        "name": "Display level"
+      },
+      "status": {
+        "name": "Filter status",
+        "state": {
+          "ok": "OK",
+          "replace_soon": "Replace soon",
+          "replace_now": "Replace now!"
+        }
+      }
+    }
+  },
+  "services": {
+    "reset_filter": {
+      "name": "Reset filter",
+      "description": "Mark filter as replaced today and reset the counter."
+    }
+  }
+}

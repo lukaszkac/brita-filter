@@ -1,0 +1,57 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguracja filtra Brita",
+        "description": "Skonfiguruj monitor filtra Brita",
+        "data": {
+          "name": "Nazwa",
+          "filter_lifetime_days": "Żywotność filtra (dni)",
+          "last_replaced": "Ostatnia wymiana (RRRR-MM-DD)"
+        }
+      }
+    },
+    "error": {},
+    "abort": {
+      "already_configured": "Ten filtr jest już skonfigurowany"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje filtra Brita",
+        "data": {
+          "filter_lifetime_days": "Żywotność filtra (dni)",
+          "last_replaced": "Ostatnia wymiana (RRRR-MM-DD)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "days_since": {
+        "name": "Dni od wymiany"
+      },
+      "remaining_pct": {
+        "name": "Pozostało filtra"
+      },
+      "display_level": {
+        "name": "Poziom (wyświetlacz)"
+      },
+      "status": {
+        "name": "Status filtra",
+        "state": {
+          "ok": "OK",
+          "replace_soon": "Wkrótce wymień",
+          "replace_now": "Wymień filtr!"
+        }
+      }
+    }
+  },
+  "services": {
+    "reset_filter": {
+      "name": "Reset filtra",
+      "description": "Oznacza filtr jako wymieniony dzisiaj i resetuje licznik."
+    }
+  }
+}
