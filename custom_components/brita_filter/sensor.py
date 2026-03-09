@@ -104,6 +104,7 @@ class BritaRemainingPctSensor(BritaBaseSensor):
 class BritaDisplayLevelSensor(BritaBaseSensor):
     _attr_icon = "mdi:water-alert"
     _attr_translation_key = "display_level"
+    _attr_entity_registry_enabled_default = False
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
@@ -136,6 +137,6 @@ class BritaStatusSensor(BritaBaseSensor):
     @property
     def native_value(self) -> str:
         pct = self._pct_remaining
-        if pct > 50:   return "ok"
+        if pct > 50:   return "good"
         elif pct > 15: return "replace_soon"
         return "replace_now"

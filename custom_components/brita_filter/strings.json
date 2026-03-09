@@ -41,7 +41,7 @@
       "status": {
         "name": "Filter status",
         "state": {
-          "ok": "OK",
+          "good": "Good",
           "replace_soon": "Replace soon",
           "replace_now": "Replace now!"
         }

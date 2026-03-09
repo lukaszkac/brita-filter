@@ -8,54 +8,84 @@ blueprint:
   source_url: https://github.com/lukaszkac/brita-filter/blob/master/blueprints/automation/brita_filter_notifications.yaml
 
   input:
-    filter_status_entity:
-      name: Filter status entity
-      description: The status sensor from the Brita Filter integration.
-      selector:
-        entity:
-          domain: sensor
-          integration: brita_filter
+    filter_entities:
+      name: Filter sensors
+      icon: mdi:water-check
+      input:
+        filter_status_entity:
+          name: Filter status entity
+          description: "The 'Filter status' sensor from the Brita Filter integration."
+          selector:
+            entity:
+              domain: sensor
+              integration: brita_filter
 
-    notify_service:
-      name: Notification service
-      description: >
-        Service to send notifications (e.g. notify.mobile_app_your_phone,
-        notify.telegram, notify.persistent_notification).
-      default: notify.persistent_notification
-      selector:
-        text:
+        filter_days_entity:
+          name: Days since replacement entity
+          description: "The 'Days since replacement' sensor from the Brita Filter integration."
+          selector:
+            entity:
+              domain: sensor
+              integration: brita_filter
 
-    notify_replace_soon:
-      name: Notify when filter is nearing end of life
-      description: Send a notification when status changes to "Replace soon".
-      default: true
-      selector:
-        boolean:
+        filter_pct_entity:
+          name: Filter remaining entity
+          description: "The 'Filter remaining' (%) sensor from the Brita Filter integration."
+          selector:
+            entity:
+              domain: sensor
+              integration: brita_filter
 
-    notify_replace_now:
-      name: Notify when filter is overdue
-      description: Send a notification when status changes to "Replace now!".
-      default: true
-      selector:
-        boolean:
+    notifications:
+      name: Notifications
+      icon: mdi:bell
+      input:
+        notify_service:
+          name: Notification service
+          description: >
+            Service to send notifications (e.g. notify.mobile_app_your_phone,
+            notify.telegram, notify.persistent_notification).
+          default: notify.persistent_notification
+          selector:
+            text:
 
-    daily_reminder:
-      name: Daily morning reminder
-      description: >
-        Send a daily reminder at a set time when the filter is overdue.
-      default: false
-      selector:
-        boolean:
+        notify_replace_soon:
+          name: Notify when filter is nearing end of life
+          description: Send a notification when status changes to "Replace soon".
+          default: true
+          selector:
+            boolean:
 
-    reminder_time:
-      name: Daily reminder time
-      description: Time to send the daily reminder (only used if daily reminder is enabled).
-      default: "08:00:00"
-      selector:
-        time:
+        notify_replace_now:
+          name: Notify when filter is overdue
+          description: Send a notification when status changes to "Replace now!".
+          default: true
+          selector:
+            boolean:
+
+    reminders:
+      name: Daily reminder
+      icon: mdi:clock-alert
+      input:
+        daily_reminder:
+          name: Enable daily morning reminder
+          description: >
+            Send a daily reminder at a set time when the filter is overdue.
+          default: false
+          selector:
+            boolean:
+
+        reminder_time:
+          name: Daily reminder time
+          description: Time to send the daily reminder (only used if daily reminder is enabled).
+          default: "08:00:00"
+          selector:
+            time:
 
 variables:
   filter_status_entity: !input filter_status_entity
+  filter_days_entity: !input filter_days_entity
+  filter_pct_entity: !input filter_pct_entity
   notify_service: !input notify_service
   notify_replace_soon: !input notify_replace_soon
   notify_replace_now: !input notify_replace_now
@@ -91,8 +121,8 @@ condition:
 
 action:
   - variables:
-      days_used: "{{ states(filter_status_entity | replace('_status', '_days_since')) | int(0) }}"
-      pct_remaining: "{{ states(filter_status_entity | replace('_status', '_remaining_pct')) | int(0) }}"
+      days_used: "{{ states(filter_days_entity) | int(0) }}"
+      pct_remaining: "{{ states(filter_pct_entity) | int(0) }}"
 
   - service: "{{ notify_service }}"
     data:
@@ -105,10 +135,10 @@ action:
       message: >
         {% if trigger.id == 'replace_soon' %}
           Your Brita filter is at {{ pct_remaining }}% — time to order a replacement.
-          Filter has been running for {{ days_used }} days.
+          It has been running for {{ days_used }} days.
         {% elif trigger.id in ['replace_now', 'daily'] %}
           Your Brita filter is overdue! It has been running for {{ days_used }} days.
-          Please replace the filter.
+          Please replace the filter as soon as possible.
         {% endif %}
 
 mode: single

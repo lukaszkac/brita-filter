@@ -6,8 +6,12 @@
         "description": "Configure your Brita filter monitor",
         "data": {
           "name": "Name",
-          "filter_lifetime_days": "Filter lifetime (days)",
-          "last_replaced": "Last replaced (YYYY-MM-DD)"
+          "filter_lifetime_days": "Filter lifetime",
+          "last_replaced": "Last replaced"
+        },
+        "data_description": {
+          "filter_lifetime_days": "How many days before the filter should be replaced (7–60). Brita recommends 28 days.",
+          "last_replaced": "Date you last replaced the filter."
         }
       }
     },
@@ -21,8 +25,12 @@
       "init": {
         "title": "Brita Filter options",
         "data": {
-          "filter_lifetime_days": "Filter lifetime (days)",
-          "last_replaced": "Last replaced (YYYY-MM-DD)"
+          "filter_lifetime_days": "Filter lifetime",
+          "last_replaced": "Last replaced"
+        },
+        "data_description": {
+          "filter_lifetime_days": "How many days before the filter should be replaced (7–60). Brita recommends 28 days.",
+          "last_replaced": "Date you last replaced the filter."
         }
       }
     }
@@ -41,7 +49,7 @@
       "status": {
         "name": "Filter status",
         "state": {
-          "ok": "OK",
+          "good": "Good",
           "replace_soon": "Replace soon",
           "replace_now": "Replace now!"
         }
