@@ -2,7 +2,6 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/lukaszkac/brita-filter?label=release&style=flat-square)](https://github.com/lukaszkac/brita-filter/releases)
-[![GitHub downloads](https://img.shields.io/github/downloads/lukaszkac/brita-filter/total?style=flat-square)](https://github.com/lukaszkac/brita-filter/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Monitor your Brita water filter life directly in Home Assistant – no cloud, no app, no hardware required.
