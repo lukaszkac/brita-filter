@@ -1,14 +1,14 @@
 {
   "domain": "brita_filter",
   "name": "Brita Filter",
-  "version": "0.20",
+  "version": "0.21",
   "config_flow": true,
   "documentation": "https://github.com/lukaszkac/brita-filter",
   "issue_tracker": "https://github.com/lukaszkac/brita-filter/issues",
   "codeowners": [
     "@lukaszkac"
   ],
-  "iot_class": "local_push",
+  "iot_class": "calculated",
   "dependencies": [],
   "requirements": []
 }

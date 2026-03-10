@@ -3,8 +3,9 @@ reset_filter:
   description: Mark the filter as replaced today and reset the counter.
   fields:
     entry_id:
-      name: Entry ID
-      description: Optional config entry ID (defaults to the first configured filter).
+      name: Filter
+      description: Which filter to reset. Leave empty to reset all configured filters.
       required: false
       selector:
-        text:
+        config_entry:
+          integration: brita_filter

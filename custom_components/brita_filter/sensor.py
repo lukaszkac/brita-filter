@@ -28,12 +28,7 @@ async def async_setup_entry(
 
 
 class BritaBaseSensor(SensorEntity):
-    """Base class for Brita sensors.
-
-    entity_id is set explicitly in each subclass __init__ so it is always
-    stable English regardless of HA language.
-    _attr_translation_key provides the translated friendly name shown in UI.
-    """
+    """Base class for Brita sensors."""
 
     _attr_has_entity_name = True
 
@@ -83,6 +78,14 @@ class BritaDaysSinceSensor(BritaBaseSensor):
     @property
     def native_value(self) -> int:
         return self._days_since
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {
+            "last_replaced": self._last_replaced.isoformat(),
+            "filter_lifetime_days": self._lifetime,
+            "days_remaining": max(self._lifetime - self._days_since, 0),
+        }
 
 
 class BritaRemainingPctSensor(BritaBaseSensor):

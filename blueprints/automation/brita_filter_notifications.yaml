@@ -116,11 +116,13 @@ trigger:
   - platform: state
     entity_id: !input filter_status_entity
     to: replace_soon
+    for: "00:00:05"
     id: replace_soon
 
   - platform: state
     entity_id: !input filter_status_entity
     to: replace_now
+    for: "00:00:05"
     id: replace_now
 
   - platform: time
