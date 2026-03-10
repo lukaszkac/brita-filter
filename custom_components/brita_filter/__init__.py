@@ -12,43 +12,49 @@ from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
-from .const import DOMAIN, CONF_FILTER_LIFETIME, CONF_LAST_REPLACED
+from .const import DOMAIN, CONF_LAST_REPLACED
 
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = ["sensor", "button"]
 
-BLUEPRINT_SRC = Path(__file__).parent.parent.parent / "blueprints" / "automation" / "brita_filter_notifications.yaml"
-# Fallback: blueprint shipped inside custom_components folder
-BLUEPRINT_SRC_FALLBACK = Path(__file__).parent / "blueprints" / "brita_filter_notifications.yaml"
-
 
 def _install_blueprint(hass: HomeAssistant) -> None:
     """Copy blueprint to HA blueprints folder if not already present."""
-    dest = Path(hass.config.config_dir) / "blueprints" / "automation" / "brita_filter_notifications.yaml"
-    dest.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        src = Path(__file__).parent / "blueprints" / "brita_filter_notifications.yaml"
+        if not src.exists():
+            _LOGGER.warning("Brita Filter: blueprint source not found at %s", src)
+            return
 
-    src = BLUEPRINT_SRC if BLUEPRINT_SRC.exists() else BLUEPRINT_SRC_FALLBACK
-    if not src.exists():
-        _LOGGER.warning("Brita Filter: blueprint source not found, skipping install")
-        return
+        dest = (
+            Path(hass.config.config_dir)
+            / "blueprints"
+            / "automation"
+            / "brita_filter_notifications.yaml"
+        )
+        dest.parent.mkdir(parents=True, exist_ok=True)
 
-    if not dest.exists():
-        shutil.copy2(src, dest)
-        _LOGGER.info("Brita Filter: blueprint installed to %s", dest)
-    else:
-        _LOGGER.debug("Brita Filter: blueprint already present at %s", dest)
+        if not dest.exists():
+            shutil.copy2(src, dest)
+            _LOGGER.info("Brita Filter: blueprint installed to %s", dest)
+    except Exception as err:  # noqa: BLE001
+        _LOGGER.warning("Brita Filter: could not install blueprint: %s", err)
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Register static path for HA frontend icon and install blueprint."""
-    await hass.http.async_register_static_paths([
-        StaticPathConfig(
-            "/static/custom_components/brita_filter",
-            str(Path(__file__).parent),
-            True,
-        )
-    ])
+    try:
+        await hass.http.async_register_static_paths([
+            StaticPathConfig(
+                "/static/custom_components/brita_filter",
+                str(Path(__file__).parent),
+                True,
+            )
+        ])
+    except Exception as err:  # noqa: BLE001
+        _LOGGER.warning("Brita Filter: could not register static path: %s", err)
+
     await hass.async_add_executor_job(_install_blueprint, hass)
     return True
 
@@ -63,9 +69,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     async def handle_reset_filter(call: ServiceCall) -> None:
         """Handle filter replacement reset service."""
         entry_id = call.data.get("entry_id", entry.entry_id)
-        new_data = {**entry.data, CONF_LAST_REPLACED: date.today().isoformat()}
-        hass.config_entries.async_update_entry(entry, data=new_data)
-        await hass.config_entries.async_reload(entry.entry_id)
+        target_entry = hass.config_entries.async_get_entry(entry_id) or entry
+        new_data = {**target_entry.data, CONF_LAST_REPLACED: date.today().isoformat()}
+        hass.config_entries.async_update_entry(target_entry, data=new_data)
+        await hass.config_entries.async_reload(target_entry.entry_id)
 
     hass.services.async_register(
         DOMAIN,
