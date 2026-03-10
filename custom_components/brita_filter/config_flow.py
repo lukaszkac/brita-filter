@@ -108,17 +108,15 @@ class BritaFilterConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry):
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> config_entries.OptionsFlow:
         """Return options flow."""
-        return BritaFilterOptionsFlow(config_entry)
+        return BritaFilterOptionsFlow()
 
 
 class BritaFilterOptionsFlow(config_entries.OptionsFlow):
     """Handle options flow for Brita Filter."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
+    # No __init__ needed — self.config_entry is set automatically by HA 2024.x+
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
