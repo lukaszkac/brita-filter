@@ -18,8 +18,10 @@ blueprint:
           default: sensor.brita_filter_status
           selector:
             entity:
-              domain: sensor
-              integration: brita_filter
+              filter:
+                - integration: brita_filter
+                  domain: sensor
+                  entity_id: "sensor.brita_filter_status*"
 
         filter_days_entity:
           name: Days since replacement entity
@@ -27,8 +29,10 @@ blueprint:
           default: sensor.brita_filter_days_since
           selector:
             entity:
-              domain: sensor
-              integration: brita_filter
+              filter:
+                - integration: brita_filter
+                  domain: sensor
+                  entity_id: "sensor.brita_filter_days_since*"
 
         filter_pct_entity:
           name: Filter remaining entity
@@ -36,8 +40,10 @@ blueprint:
           default: sensor.brita_filter_remaining
           selector:
             entity:
-              domain: sensor
-              integration: brita_filter
+              filter:
+                - integration: brita_filter
+                  domain: sensor
+                  entity_id: "sensor.brita_filter_remaining*"
 
     notifications:
       name: Notifications
@@ -45,10 +51,9 @@ blueprint:
       input:
         notify_service:
           name: Notification service
-          description: >
-            Select the service to send notifications to.
+          description: "Select the service to send notifications to."
           selector:
-            text:
+            notify: {}
 
         message_language:
           name: Notification language
@@ -67,14 +72,14 @@ blueprint:
           description: Send a notification when status changes to "Replace soon".
           default: true
           selector:
-            boolean:
+            boolean: {}
 
         notify_replace_now:
           name: Notify when filter is overdue
           description: Send a notification when status changes to "Replace now!".
           default: true
           selector:
-            boolean:
+            boolean: {}
 
     reminders:
       name: Daily reminder
@@ -86,14 +91,14 @@ blueprint:
             Send a daily reminder at a set time when the filter is overdue.
           default: false
           selector:
-            boolean:
+            boolean: {}
 
         reminder_time:
           name: Daily reminder time
           description: Time to send the daily reminder (only used if daily reminder is enabled).
           default: "08:00:00"
           selector:
-            time:
+            time: {}
 
 variables:
   filter_status_entity: !input filter_status_entity
@@ -137,7 +142,7 @@ action:
       days_used: "{{ states(filter_days_entity) | int(0) }}"
       pct_remaining: "{{ states(filter_pct_entity) | int(0) }}"
 
-  - action: notify.{{ notify_service }}
+  - action: "notify.{{ notify_service }}"
     data:
       title: >
         {% if message_language == 'pl' %}
