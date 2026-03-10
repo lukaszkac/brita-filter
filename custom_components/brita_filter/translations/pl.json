@@ -54,6 +54,11 @@
       "remaining": {
         "name": "Pozostało filtra"
       }
+    },
+    "button": {
+      "reset_filter": {
+        "name": "Wymień filtr"
+      }
     }
   },
   "services": {

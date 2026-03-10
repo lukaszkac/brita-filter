@@ -6,16 +6,25 @@
 
 Monitor your Brita water filter life directly in Home Assistant – no cloud, no app, no hardware required.
 
+![Brita Filter integration overview](docs/screenshot_integration.png)
+
 ## Features
 
 - Tracks days since last filter replacement
 - Shows remaining filter life as %
 - Mirrors the physical pitcher display (25% steps)
-- Status sensor: OK / Replace soon / Replace now!
-- `brita_filter.reset_filter` service to reset the counter on replacement
+- Status sensor: Good / Replace soon / Replace now!
+- **One-click reset button** — mark filter as replaced directly from the HA UI
+- `brita_filter.reset_filter` service to reset via automations
 - Config flow – no YAML needed
 - 🇬🇧 English / 🇵🇱 Polish translations
 - Automation Blueprint for notifications included
+
+## Screenshots
+
+| Integration page | Entities | Configure options |
+|:---:|:---:|:---:|
+| ![Integration](docs/screenshot_integration.png) | ![Entities](docs/screenshot_entities.png) | ![Options](docs/screenshot_options.png) |
 
 ## Installation via HACS
 
@@ -36,21 +45,24 @@ After adding the integration you will be asked for:
 | Field | Default | Description |
 |---|---|---|
 | Name | Brita Filter | Friendly name |
-| Filter lifetime (days) | 28 | Recommended replacement interval |
+| Filter lifetime | 28 days | Recommended replacement interval |
 | Last replaced | today | Date of last filter replacement |
+
+Settings can be changed anytime via **Settings → Integrations → Brita Filter → Configure**.
 
 ## Entities
 
 | Entity | Unit | Description |
 |---|---|---|
 | `sensor.brita_filter_days_since` | d | Days since last replacement |
-| `sensor.brita_filter_remaining_pct` | % | Remaining filter life |
-| `sensor.brita_filter_display_level` | – | Level matching physical display |
-| `sensor.brita_filter_status` | – | ok / replace_soon / replace_now |
+| `sensor.brita_filter_remaining` | % | Remaining filter life |
+| `sensor.brita_filter_status` | – | good / replace_soon / replace_now |
+| `sensor.brita_filter_display_level` | – | Level matching physical display *(hidden by default)* |
+| `button.brita_filter_reset` | – | Mark filter as replaced today |
 
-## Service: `brita_filter.reset_filter`
+## Replacing the filter
 
-Call this service when you replace the filter. It sets today as the replacement date.
+When you replace your filter, press the **Replace filter** button in the HA device page, or call the service:
 
 ```yaml
 service: brita_filter.reset_filter
@@ -58,7 +70,11 @@ service: brita_filter.reset_filter
 
 ## Notifications (Blueprint)
 
-Import the included automation blueprint to get filter replacement notifications on any channel:
+The integration automatically installs an automation blueprint on first run.
+
+Go to **Settings → Automations → Blueprints** and look for **Brita Filter – notifications**.
+
+Or import it manually:
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/lukaszkac/brita-filter/master/blueprints/automation/brita_filter_notifications.yaml)
 

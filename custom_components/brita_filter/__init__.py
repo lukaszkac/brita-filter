@@ -1,6 +1,8 @@
 """Brita Filter integration for Home Assistant."""
 from __future__ import annotations
 
+import logging
+import shutil
 from pathlib import Path
 from datetime import date
 
@@ -12,11 +14,34 @@ import voluptuous as vol
 
 from .const import DOMAIN, CONF_FILTER_LIFETIME, CONF_LAST_REPLACED
 
-PLATFORMS = ["sensor"]
+_LOGGER = logging.getLogger(__name__)
+
+PLATFORMS = ["sensor", "button"]
+
+BLUEPRINT_SRC = Path(__file__).parent.parent.parent / "blueprints" / "automation" / "brita_filter_notifications.yaml"
+# Fallback: blueprint shipped inside custom_components folder
+BLUEPRINT_SRC_FALLBACK = Path(__file__).parent / "blueprints" / "brita_filter_notifications.yaml"
+
+
+def _install_blueprint(hass: HomeAssistant) -> None:
+    """Copy blueprint to HA blueprints folder if not already present."""
+    dest = Path(hass.config.config_dir) / "blueprints" / "automation" / "brita_filter_notifications.yaml"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    src = BLUEPRINT_SRC if BLUEPRINT_SRC.exists() else BLUEPRINT_SRC_FALLBACK
+    if not src.exists():
+        _LOGGER.warning("Brita Filter: blueprint source not found, skipping install")
+        return
+
+    if not dest.exists():
+        shutil.copy2(src, dest)
+        _LOGGER.info("Brita Filter: blueprint installed to %s", dest)
+    else:
+        _LOGGER.debug("Brita Filter: blueprint already present at %s", dest)
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Register static path so HA frontend can serve the integration icon."""
+    """Register static path for HA frontend icon and install blueprint."""
     await hass.http.async_register_static_paths([
         StaticPathConfig(
             "/static/custom_components/brita_filter",
@@ -24,6 +49,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
             True,
         )
     ])
+    await hass.async_add_executor_job(_install_blueprint, hass)
     return True
 
 
