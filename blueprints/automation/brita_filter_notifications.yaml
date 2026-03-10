@@ -147,7 +147,7 @@ action:
       days_used: "{{ states(filter_days_entity) | int(0) }}"
       pct_remaining: "{{ states(filter_pct_entity) | int(0) }}"
 
-  - action: "{{ notify_service }}"
+  - service: "{{ notify_service }}"
     data:
       title: >
         {% if message_language == 'pl' %}
