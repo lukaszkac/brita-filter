@@ -48,7 +48,7 @@ blueprint:
           description: >
             Select the service to send notifications to.
           selector:
-            notify:
+            text:
 
         message_language:
           name: Notification language
