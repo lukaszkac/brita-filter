@@ -14,36 +14,33 @@ blueprint:
       input:
         filter_status_entity:
           name: Filter status entity
-          description: "The 'Filter status' sensor from the Brita Filter integration."
+          description: "The 'Filter status' sensor (sensor.brita_filter_status)."
           default: sensor.brita_filter_status
           selector:
             entity:
               filter:
                 - integration: brita_filter
                   domain: sensor
-                  entity_id: "sensor.brita_filter_status*"
 
         filter_days_entity:
           name: Days since replacement entity
-          description: "The 'Days since replacement' sensor from the Brita Filter integration."
+          description: "The 'Days since replacement' sensor (sensor.brita_filter_days_since)."
           default: sensor.brita_filter_days_since
           selector:
             entity:
               filter:
                 - integration: brita_filter
                   domain: sensor
-                  entity_id: "sensor.brita_filter_days_since*"
 
         filter_pct_entity:
           name: Filter remaining entity
-          description: "The 'Filter remaining' (%) sensor from the Brita Filter integration."
+          description: "The 'Filter remaining' (%) sensor (sensor.brita_filter_remaining)."
           default: sensor.brita_filter_remaining
           selector:
             entity:
               filter:
                 - integration: brita_filter
                   domain: sensor
-                  entity_id: "sensor.brita_filter_remaining*"
 
     notifications:
       name: Notifications
@@ -51,9 +48,12 @@ blueprint:
       input:
         notify_service:
           name: Notification service
-          description: "Select the service to send notifications to."
+          description: >
+            Service to send notifications, e.g. notify.mobile_app_your_phone,
+            notify.telegram, notify.persistent_notification.
+          default: notify.persistent_notification
           selector:
-            notify: {}
+            text: {}
 
         message_language:
           name: Notification language
@@ -142,7 +142,7 @@ action:
       days_used: "{{ states(filter_days_entity) | int(0) }}"
       pct_remaining: "{{ states(filter_pct_entity) | int(0) }}"
 
-  - action: "notify.{{ notify_service }}"
+  - action: "{{ notify_service }}"
     data:
       title: >
         {% if message_language == 'pl' %}
