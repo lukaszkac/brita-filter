@@ -40,9 +40,6 @@
       "days_since": {
         "name": "Dni od wymiany"
       },
-      "remaining_pct": {
-        "name": "Pozostało filtra"
-      },
       "display_level": {
         "name": "Poziom (wyświetlacz)"
       },
@@ -53,6 +50,9 @@
           "replace_soon": "Wkrótce wymień",
           "replace_now": "Wymień filtr!"
         }
+      },
+      "remaining": {
+        "name": "Pozostało filtra"
       }
     }
   },

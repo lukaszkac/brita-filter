@@ -30,9 +30,9 @@ async def async_setup_entry(
 class BritaBaseSensor(SensorEntity):
     """Base class for Brita sensors.
 
-    _attr_has_entity_name = True means entity_id = sensor.{device_name}_{entity_name}.
-    Entity names are always fixed English strings so entity_ids are stable
-    regardless of the HA language. Users can rename friendly names in the HA UI.
+    _attr_has_entity_name = True + _attr_translation_key:
+    - entity_id is always stable English slug: sensor.brita_filter_days_since etc.
+    - Friendly name (displayed in UI) comes from translations/ and follows HA language.
     """
 
     _attr_has_entity_name = True
@@ -69,8 +69,9 @@ class BritaBaseSensor(SensorEntity):
 
 
 class BritaDaysSinceSensor(BritaBaseSensor):
-    # entity_id: sensor.brita_filter_days_since
-    _attr_name = "Days since"
+    # entity_id: sensor.brita_filter_days_since  (always, any language)
+    # friendly name: "Days since" / "Dni od wymiany"  (from translations)
+    _attr_translation_key = "days_since"
     _attr_icon = "mdi:calendar-clock"
     _attr_native_unit_of_measurement = "d"
     _attr_state_class = SensorStateClass.MEASUREMENT
@@ -85,15 +86,16 @@ class BritaDaysSinceSensor(BritaBaseSensor):
 
 
 class BritaRemainingPctSensor(BritaBaseSensor):
-    # entity_id: sensor.brita_filter_remaining_pct
-    _attr_name = "Remaining pct"
+    # entity_id: sensor.brita_filter_remaining  (always, any language)
+    # friendly name: "Remaining" / "Pozostało"  (from translations)
+    _attr_translation_key = "remaining"
     _attr_icon = "mdi:water-percent"
     _attr_native_unit_of_measurement = "%"
     _attr_state_class = SensorStateClass.MEASUREMENT
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
-        self._attr_unique_id = f"{entry.entry_id}_remaining_pct"
+        self._attr_unique_id = f"{entry.entry_id}_remaining"
 
     @property
     def native_value(self) -> int:
@@ -109,8 +111,9 @@ class BritaRemainingPctSensor(BritaBaseSensor):
 
 
 class BritaDisplayLevelSensor(BritaBaseSensor):
-    # entity_id: sensor.brita_filter_display_level
-    _attr_name = "Display level"
+    # entity_id: sensor.brita_filter_display_level  (always, any language)
+    # friendly name: "Display level" / "Poziom (wyświetlacz)"  (from translations)
+    _attr_translation_key = "display_level"
     _attr_icon = "mdi:water-alert"
     _attr_entity_registry_enabled_default = False  # hidden by default
 
@@ -129,10 +132,9 @@ class BritaDisplayLevelSensor(BritaBaseSensor):
 
 
 class BritaStatusSensor(BritaBaseSensor):
-    # entity_id: sensor.brita_filter_status
-    # _attr_translation_key used ONLY for state value translations
-    # (good/replace_soon/replace_now) — NOT for the entity name
-    _attr_name = "Status"
+    # entity_id: sensor.brita_filter_status  (always, any language)
+    # friendly name: "Filter status" / "Status filtra"  (from translations)
+    # state values: "Good" / "Dobry" etc.  (from translations)
     _attr_translation_key = "status"
 
     def __init__(self, entry: ConfigEntry) -> None:

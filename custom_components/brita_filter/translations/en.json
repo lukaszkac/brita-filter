@@ -40,9 +40,6 @@
       "days_since": {
         "name": "Days since replacement"
       },
-      "remaining_pct": {
-        "name": "Filter remaining"
-      },
       "display_level": {
         "name": "Display level"
       },
@@ -53,6 +50,9 @@
           "replace_soon": "Replace soon",
           "replace_now": "Replace now!"
         }
+      },
+      "remaining": {
+        "name": "Filter remaining"
       }
     }
   },
