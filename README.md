@@ -60,7 +60,7 @@ service: brita_filter.reset_filter
 
 Import the included automation blueprint to get filter replacement notifications on any channel:
 
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/lukaszkac/brita-filter/blob/master/blueprints/automation/brita_filter_notifications.yaml)
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/lukaszkac/brita-filter/master/blueprints/automation/brita_filter_notifications.yaml)
 
 **Configurable options:**
 - Any notification service (mobile app, Telegram, email, persistent notification...)

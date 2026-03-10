@@ -5,7 +5,7 @@ blueprint:
     Supports any notification service (mobile app, Telegram, etc.).
     Optionally sends a daily morning reminder when the filter is overdue.
   domain: automation
-  source_url: https://github.com/lukaszkac/brita-filter/blob/master/blueprints/automation/brita_filter_notifications.yaml
+  source_url: https://raw.githubusercontent.com/lukaszkac/brita-filter/master/blueprints/automation/brita_filter_notifications.yaml
 
   input:
     filter_entities:

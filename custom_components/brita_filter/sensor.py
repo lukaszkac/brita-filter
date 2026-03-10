@@ -28,7 +28,12 @@ async def async_setup_entry(
 
 
 class BritaBaseSensor(SensorEntity):
-    """Base class for Brita sensors."""
+    """Base class for Brita sensors.
+
+    _attr_has_entity_name = True means entity_id = sensor.{device_name}_{entity_name}.
+    Entity names are always fixed English strings so entity_ids are stable
+    regardless of the HA language. Users can rename friendly names in the HA UI.
+    """
 
     _attr_has_entity_name = True
 
@@ -64,10 +69,11 @@ class BritaBaseSensor(SensorEntity):
 
 
 class BritaDaysSinceSensor(BritaBaseSensor):
+    # entity_id: sensor.brita_filter_days_since
+    _attr_name = "Days since"
     _attr_icon = "mdi:calendar-clock"
     _attr_native_unit_of_measurement = "d"
     _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_translation_key = "days_since"
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
@@ -79,10 +85,11 @@ class BritaDaysSinceSensor(BritaBaseSensor):
 
 
 class BritaRemainingPctSensor(BritaBaseSensor):
+    # entity_id: sensor.brita_filter_remaining_pct
+    _attr_name = "Remaining pct"
     _attr_icon = "mdi:water-percent"
     _attr_native_unit_of_measurement = "%"
     _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_translation_key = "remaining_pct"
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
@@ -102,9 +109,10 @@ class BritaRemainingPctSensor(BritaBaseSensor):
 
 
 class BritaDisplayLevelSensor(BritaBaseSensor):
+    # entity_id: sensor.brita_filter_display_level
+    _attr_name = "Display level"
     _attr_icon = "mdi:water-alert"
-    _attr_translation_key = "display_level"
-    _attr_entity_registry_enabled_default = False
+    _attr_entity_registry_enabled_default = False  # hidden by default
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
@@ -121,6 +129,10 @@ class BritaDisplayLevelSensor(BritaBaseSensor):
 
 
 class BritaStatusSensor(BritaBaseSensor):
+    # entity_id: sensor.brita_filter_status
+    # _attr_translation_key used ONLY for state value translations
+    # (good/replace_soon/replace_now) — NOT for the entity name
+    _attr_name = "Status"
     _attr_translation_key = "status"
 
     def __init__(self, entry: ConfigEntry) -> None:
