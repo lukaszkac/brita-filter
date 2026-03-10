@@ -14,33 +14,36 @@ blueprint:
       input:
         filter_status_entity:
           name: Filter status entity
-          description: "The 'Filter status' sensor (sensor.brita_filter_status)."
+          description: "The 'Filter status' sensor from the Brita Filter integration."
           default: sensor.brita_filter_status
           selector:
             entity:
               filter:
                 - integration: brita_filter
                   domain: sensor
+                  device_class: enum
 
         filter_days_entity:
           name: Days since replacement entity
-          description: "The 'Days since replacement' sensor (sensor.brita_filter_days_since)."
+          description: "The 'Days since replacement' sensor from the Brita Filter integration."
           default: sensor.brita_filter_days_since
           selector:
             entity:
               filter:
                 - integration: brita_filter
                   domain: sensor
+                  device_class: duration
 
         filter_pct_entity:
           name: Filter remaining entity
-          description: "The 'Filter remaining' (%) sensor (sensor.brita_filter_remaining)."
+          description: "The 'Filter remaining' (%) sensor from the Brita Filter integration."
           default: sensor.brita_filter_remaining
           selector:
             entity:
               filter:
                 - integration: brita_filter
                   domain: sensor
+                  device_class: battery
 
     notifications:
       name: Notifications

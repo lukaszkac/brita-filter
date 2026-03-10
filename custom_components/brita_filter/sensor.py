@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity, SensorStateClass
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
@@ -73,11 +73,12 @@ class BritaDaysSinceSensor(BritaBaseSensor):
     _attr_icon = "mdi:calendar-clock"
     _attr_native_unit_of_measurement = "d"
     _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_device_class = SensorDeviceClass.DURATION
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
         self._attr_unique_id = f"{entry.entry_id}_days_since"
-        self.entity_id = f"sensor.brita_filter_days_since"
+        self.entity_id = "sensor.brita_filter_days_since"
 
     @property
     def native_value(self) -> int:
@@ -89,11 +90,12 @@ class BritaRemainingPctSensor(BritaBaseSensor):
     _attr_icon = "mdi:water-percent"
     _attr_native_unit_of_measurement = "%"
     _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_device_class = SensorDeviceClass.BATTERY
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
         self._attr_unique_id = f"{entry.entry_id}_remaining"
-        self.entity_id = f"sensor.brita_filter_remaining"
+        self.entity_id = "sensor.brita_filter_remaining"
 
     @property
     def native_value(self) -> int:
@@ -109,6 +111,8 @@ class BritaRemainingPctSensor(BritaBaseSensor):
 
 
 class BritaDisplayLevelSensor(BritaBaseSensor):
+    """Display level sensor — disabled by default, no device_class so it won't
+    appear in blueprint entity selectors filtered by device_class."""
     _attr_translation_key = "display_level"
     _attr_icon = "mdi:water-alert"
     _attr_entity_registry_enabled_default = False
@@ -116,7 +120,7 @@ class BritaDisplayLevelSensor(BritaBaseSensor):
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
         self._attr_unique_id = f"{entry.entry_id}_display_level"
-        self.entity_id = f"sensor.brita_filter_display_level"
+        self.entity_id = "sensor.brita_filter_display_level"
 
     @property
     def native_value(self) -> str:
@@ -130,11 +134,13 @@ class BritaDisplayLevelSensor(BritaBaseSensor):
 
 class BritaStatusSensor(BritaBaseSensor):
     _attr_translation_key = "status"
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["good", "replace_soon", "replace_now"]
 
     def __init__(self, entry: ConfigEntry) -> None:
         super().__init__(entry)
         self._attr_unique_id = f"{entry.entry_id}_status"
-        self.entity_id = f"sensor.brita_filter_status"
+        self.entity_id = "sensor.brita_filter_status"
 
     @property
     def icon(self) -> str:
