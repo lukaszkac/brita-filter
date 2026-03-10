@@ -1,7 +1,7 @@
 {
   "domain": "brita_filter",
   "name": "Brita Filter",
-  "version": "0.12",
+  "version": "0.14",
   "config_flow": true,
   "documentation": "https://github.com/lukaszkac/brita-filter",
   "issue_tracker": "https://github.com/lukaszkac/brita-filter/issues",

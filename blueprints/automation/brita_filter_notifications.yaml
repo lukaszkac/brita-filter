@@ -5,7 +5,7 @@ blueprint:
     Supports any notification service (mobile app, Telegram, etc.).
     Optionally sends a daily morning reminder when the filter is overdue.
   domain: automation
-  source_url: https://github.com/lukaszkac/brita-filter/blob/master/blueprints/automation/brita_filter_notifications.yaml
+  source_url: https://raw.githubusercontent.com/lukaszkac/brita-filter/master/blueprints/automation/brita_filter_notifications.yaml
 
   input:
     filter_entities:
@@ -15,6 +15,7 @@ blueprint:
         filter_status_entity:
           name: Filter status entity
           description: "The 'Filter status' sensor from the Brita Filter integration."
+          default: sensor.brita_filter_status
           selector:
             entity:
               domain: sensor
@@ -23,6 +24,7 @@ blueprint:
         filter_days_entity:
           name: Days since replacement entity
           description: "The 'Days since replacement' sensor from the Brita Filter integration."
+          default: sensor.brita_filter_days_since
           selector:
             entity:
               domain: sensor
@@ -31,6 +33,7 @@ blueprint:
         filter_pct_entity:
           name: Filter remaining entity
           description: "The 'Filter remaining' (%) sensor from the Brita Filter integration."
+          default: sensor.brita_filter_remaining
           selector:
             entity:
               domain: sensor
@@ -43,11 +46,21 @@ blueprint:
         notify_service:
           name: Notification service
           description: >
-            Service to send notifications (e.g. notify.mobile_app_your_phone,
-            notify.telegram, notify.persistent_notification).
-          default: notify.persistent_notification
+            Select the service to send notifications to.
           selector:
-            text:
+            notify:
+
+        message_language:
+          name: Notification language
+          description: Language used for notification title and message.
+          default: en
+          selector:
+            select:
+              options:
+                - label: English
+                  value: en
+                - label: Polski
+                  value: pl
 
         notify_replace_soon:
           name: Notify when filter is nearing end of life
@@ -86,10 +99,10 @@ variables:
   filter_status_entity: !input filter_status_entity
   filter_days_entity: !input filter_days_entity
   filter_pct_entity: !input filter_pct_entity
-  notify_service: !input notify_service
   notify_replace_soon: !input notify_replace_soon
   notify_replace_now: !input notify_replace_now
   daily_reminder: !input daily_reminder
+  message_language: !input message_language
 
 trigger:
   - platform: state
@@ -124,21 +137,39 @@ action:
       days_used: "{{ states(filter_days_entity) | int(0) }}"
       pct_remaining: "{{ states(filter_pct_entity) | int(0) }}"
 
-  - service: "{{ notify_service }}"
+  - action: notify.{{ notify_service }}
     data:
       title: >
-        {% if trigger.id in ['replace_now', 'daily'] %}
-          💧 Brita – Replace filter!
+        {% if message_language == 'pl' %}
+          {% if trigger.id in ['replace_now', 'daily'] %}
+            💧 Brita – Wymień filtr!
+          {% else %}
+            💧 Brita – Filtr kończy się
+          {% endif %}
         {% else %}
-          💧 Brita – Replace soon
+          {% if trigger.id in ['replace_now', 'daily'] %}
+            💧 Brita – Replace filter!
+          {% else %}
+            💧 Brita – Filter nearing end of life
+          {% endif %}
         {% endif %}
       message: >
-        {% if trigger.id == 'replace_soon' %}
-          Your Brita filter is at {{ pct_remaining }}% — time to order a replacement.
-          It has been running for {{ days_used }} days.
-        {% elif trigger.id in ['replace_now', 'daily'] %}
-          Your Brita filter is overdue! It has been running for {{ days_used }} days.
-          Please replace the filter as soon as possible.
+        {% if message_language == 'pl' %}
+          {% if trigger.id == 'replace_soon' %}
+            Filtr Brita jest na poziomie {{ pct_remaining }}% — czas zamówić nowy wkład.
+            Filtr pracuje od {{ days_used }} dni.
+          {% elif trigger.id in ['replace_now', 'daily'] %}
+            Filtr Brita wymaga wymiany! Pracuje już {{ days_used }} dni.
+            Wymień filtr jak najszybciej.
+          {% endif %}
+        {% else %}
+          {% if trigger.id == 'replace_soon' %}
+            Your Brita filter is at {{ pct_remaining }}% — time to order a replacement.
+            It has been running for {{ days_used }} days.
+          {% elif trigger.id in ['replace_now', 'daily'] %}
+            Your Brita filter is overdue! It has been running for {{ days_used }} days.
+            Please replace the filter as soon as possible.
+          {% endif %}
         {% endif %}
 
 mode: single
